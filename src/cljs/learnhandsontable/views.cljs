@@ -24,14 +24,9 @@
                                       :shadow        false}
                            :credits  {:enabled false}})]
     (let [tabledata (:data tableconfig)
-          ;;categories (vec (rest (get tabledata 0)))
           categories (vec (rest (:colHeaders tableconfig)))
-          data1 (assoc {} :name (str (first (get tabledata 0))) :data (vec (rest (get tabledata 0))))
-          data2 (assoc {} :name (str (first (get tabledata 1))) :data (vec (rest (get tabledata 1))))
-          data3 (assoc {} :name (str (first (get tabledata 2))) :data (vec (rest (get tabledata 2))))
-          mydata (conj [] data1 data2 data3)]
-      ;;(println data1)
-      ;;(println data2)
+          mydata (reduce (fn [outdata input] (conj outdata (assoc {} :name (str (first input)) :data (vec (rest input))))) [] tabledata)]
+      (println mydata)
       (swap! ret assoc-in [:xAxis :categories] categories)
       (swap! ret assoc-in [:series] mydata))
     ret))
@@ -43,8 +38,6 @@
   (let [[_ tableconfig] (reagent/argv this)
         tableconfigext (assoc-in tableconfig [:afterChange] #(dispatch [:set-tablevalue %]))]
     (do
-      ;(println tableconfig)
-      ;(.log js/console "table did mount!!!\n")
       (js/Handsontable (reagent/dom-node this) (clj->js tableconfigext)))))
 
 (defn sampleTable [tableconfig]
@@ -63,9 +56,6 @@
   (let [[_ tableconfig] (reagent/argv this)
         my-chart-config (gen-chart-config-handson tableconfig)]
     (do
-      ;(.log js/console "highchart did update")
-      ;(println @my-chart-config)
-      ;(println (get-in @my-chart-config [:series]))
       (js/Highcharts.Chart. (reagent/dom-node this) (clj->js @my-chart-config)))))
 
 (defn sampleHighchart [tableconfig]
