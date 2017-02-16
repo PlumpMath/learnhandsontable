@@ -19,6 +19,7 @@
           newDataTable (assoc-in dataTable [rowIdx colIdx] (js/parseInt newVal))
           newtablecofig (assoc-in mydb/init-tableconfig [:data] newDataTable)
           newdb (assoc-in db [:tableconfig] newtablecofig)]
+      (println changeData)
       ;(println rowIdx)
       ;(println colIdx)
       ;(println oldVal)

@@ -17,7 +17,6 @@
   :profiles
   {:dev
    {:dependencies [[binaryage/devtools "0.8.2"]]
-
     :plugins      [[lein-figwheel "0.5.7"]]
     }}
 
@@ -33,7 +32,7 @@
                     :source-map-timestamp true
                     :preloads             [devtools.preload]
                     :external-config      {:devtools/config {:features-to-install :all}}
-                    :externs ["./externs/handsontable.ext.js"]
+                    :externs ["./externs/handsontable.ext.js" "./externs/highchart.ext.js"]
                     }}
 
     {:id           "min"

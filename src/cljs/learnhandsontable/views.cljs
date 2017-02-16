@@ -24,13 +24,14 @@
                                       :shadow        false}
                            :credits  {:enabled false}})]
     (let [tabledata (:data tableconfig)
-          categories (vec (rest (get tabledata 0)))
-          data1 (assoc {} :name (str (first (get tabledata 1))) :data (vec (rest (get tabledata 1))))
-          data2 (assoc {} :name (str (first (get tabledata 2))) :data (vec (rest (get tabledata 2))))
-          data3 (assoc {} :name (str (first (get tabledata 3))) :data (vec (rest (get tabledata 3))))
+          ;;categories (vec (rest (get tabledata 0)))
+          categories (vec (rest (:colHeaders tableconfig)))
+          data1 (assoc {} :name (str (first (get tabledata 0))) :data (vec (rest (get tabledata 0))))
+          data2 (assoc {} :name (str (first (get tabledata 1))) :data (vec (rest (get tabledata 1))))
+          data3 (assoc {} :name (str (first (get tabledata 2))) :data (vec (rest (get tabledata 2))))
           mydata (conj [] data1 data2 data3)]
-      ;(println data1)
-      ;(println data2)
+      ;;(println data1)
+      ;;(println data2)
       (swap! ret assoc-in [:xAxis :categories] categories)
       (swap! ret assoc-in [:series] mydata))
     ret))
@@ -50,10 +51,33 @@
   (reagent/create-class {:reagent-render      sampleTable-render
                          :component-did-mount sampleTable-did-mount}))
 
+(defn sampleHighchart-render []
+  [:div {:style {:min-width "310px" :max-width "800px" :margin "0 auto"}}])
+
+(defn sampleHighchart-did-mount [this]
+  (let [[_ tableconfig] (reagent/argv this)
+        my-chart-config (gen-chart-config-handson tableconfig)]
+    (js/Highcharts.Chart. (reagent/dom-node this) (clj->js @my-chart-config))))
+
+(defn sampleHighchart-did-update [this]
+  (let [[_ tableconfig] (reagent/argv this)
+        my-chart-config (gen-chart-config-handson tableconfig)]
+    (do
+      ;(.log js/console "highchart did update")
+      ;(println @my-chart-config)
+      ;(println (get-in @my-chart-config [:series]))
+      (js/Highcharts.Chart. (reagent/dom-node this) (clj->js @my-chart-config)))))
+
+(defn sampleHighchart [tableconfig]
+  (reagent/create-class {:reagent-render      sampleHighchart-render
+                         :component-did-mount sampleHighchart-did-mount
+                         :component-did-update sampleHighchart-did-update}))
+
 
 (defn main-panel []
   (let [name (subscribe [:name])
         tableconfig (subscribe [:tableconfig])]
     (fn []
       [:div "Hello from " @name ". Vui qua ta"
-       [sampleTable @tableconfig]])))
+       [sampleTable @tableconfig]
+       [sampleHighchart @tableconfig]])))
