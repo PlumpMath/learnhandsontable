@@ -7,26 +7,25 @@
  (fn  [_ _]
    mydb/default-db))
 
+(defn updatetable [tableconfig changeData]
+  (let [dataTable (get-in tableconfig [:data] (:data mydb/init-tableconfig))
+        newDataTable (assoc-in dataTable (subvec changeData 0 2) (js/parseFloat (nth changeData 3)))
+        tableconfig (assoc-in tableconfig [:data] newDataTable)]
+    tableconfig))
+
 
 (re-frame/reg-event-db
   :set-tablevalue
-  (fn [db [_ changeData]]
-    (let [rowIdx (first (first changeData))
-          colIdx (second (first changeData))
-          oldVal (nth (first changeData) 2)
-          newVal (nth (first changeData) 3)
-          dataTable (get-in db [:tableconfig :data] (:data mydb/init-tableconfig))
-          newDataTable (assoc-in dataTable [rowIdx colIdx] (js/parseInt newVal))
-          newtablecofig (assoc-in mydb/init-tableconfig [:data] newDataTable)
-          newdb (assoc-in db [:tableconfig] newtablecofig)]
-      (println changeData)
-      ;(println rowIdx)
-      ;(println colIdx)
-      ;(println oldVal)
-      ;(println newVal)
-      ;(println tableconfig)
-      ;(println dataTable)
-      ;(println newDataTable)
-      ;(println newtablecofig)
-      ;(println newdb)
-      newdb)))
+  (fn [db [_ inchangeDatas]]
+    (let [changeDatas (js->clj inchangeDatas)
+          tableconfig (get-in db [:tableconfig] mydb/init-tableconfig)
+          newtableconfig (reduce updatetable tableconfig changeDatas)]
+      (assoc db :tableconfig newtableconfig))))
+
+
+
+
+
+
+
+

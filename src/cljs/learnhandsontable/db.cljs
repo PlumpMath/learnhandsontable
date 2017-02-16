@@ -11,5 +11,5 @@
                        :contextMenu true})
 
 (def default-db
-  {:name "re-frame"
-   })
+  {:name "re-frame"})
+

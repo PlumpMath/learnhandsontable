@@ -17,8 +17,8 @@
   :profiles
   {:dev
    {:dependencies [[binaryage/devtools "0.8.2"]]
-    :plugins      [[lein-figwheel "0.5.7"]]
-    }}
+    :plugins      [[lein-figwheel "0.5.7"]]}}
+
 
   :cljsbuild
   {:builds
@@ -32,8 +32,8 @@
                     :source-map-timestamp true
                     :preloads             [devtools.preload]
                     :external-config      {:devtools/config {:features-to-install :all}}
-                    :externs ["./externs/handsontable.ext.js" "./externs/highchart.ext.js"]
-                    }}
+                    :externs ["./externs/handsontable.ext.js" "./externs/highchart.ext.js"]}}
+
 
     {:id           "min"
      :source-paths ["src/cljs"]
@@ -41,9 +41,9 @@
                     :output-to       "resources/public/js/compiled/app.js"
                     :optimizations   :advanced
                     :closure-defines {goog.DEBUG false}
-                    :pretty-print    false}}
+                    :pretty-print    false}}]})
 
 
-    ]}
 
-  )
+
+
